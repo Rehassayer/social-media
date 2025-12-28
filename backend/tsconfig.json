@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "nodenext",
+    "moduleResolution": "nodenext", // Add this explicitly
+    "target": "esnext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,        // Essential for importing Express
+    "verbatimModuleSyntax": false   // Set to false unless you want to type .js on every import
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
