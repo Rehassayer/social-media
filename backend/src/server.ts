@@ -1,12 +1,21 @@
-import express, {Request, Response} from 'express';
+import "reflect-metadata";
+import "dotenv/config";
+import express, { Request, Response } from "express";
+import cookieParser from "cookie-parser";
 
-import authRoutes from './routes/authRoutes.js';
-
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import likeRoutes from "./routes/likeRoutes.js";
 
 const app = express();
 
-//API routes
-app.use("/media", authRoutes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
+//API routes
+app.use("/", authRoutes);
+app.use("/post", userRoutes);
+app.use("/like", likeRoutes);
 
 export default app;

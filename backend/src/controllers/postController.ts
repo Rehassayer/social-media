@@ -1,0 +1,28 @@
+import { Request, Response } from "express";
+import { User } from "../entities/User.js";
+import { Post } from "../entities/Post.js";
+import { Database } from "../config/db.js";
+
+export const createPost = async (req: Request, res: Response) => {
+  try {
+    const { content, userId } = req.body;
+
+    const userRepo = Database.getRepository(User);
+    const postRepo = Database.getRepository(Post);
+
+    const user = await userRepo.findOneBy({ id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newPost = postRepo.create({
+      content,
+      user: user,
+    });
+
+    await postRepo.save(newPost);
+    res.status(201).json({ message: "Post created", post: newPost });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating post", error });
+  }
+};

@@ -7,8 +7,11 @@
     "target": "esnext",
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,        // Essential for importing Express
-    "verbatimModuleSyntax": false   // Set to false unless you want to type .js on every import
+    "esModuleInterop": true, 
+    "experimentalDecorators": true,      // Required for @Entity, @Column, etc.       // Essential for importing Express
+    "verbatimModuleSyntax": false  , // Set to false unless you want to type .js on every import
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false // Often required because TypeORM initializes properties via the DB
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

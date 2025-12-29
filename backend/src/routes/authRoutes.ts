@@ -1,29 +1,9 @@
-import  express , {Request, Response} from "express";
+import express, { Request, Response } from "express";
+import { login, register } from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.get("/test", (req: Request, res: Response) => {
-
-    res.json({message: "Hello"})
-
-});
-
-router.post("/test", (req: Request, res: Response) => {
-
-    res.json({httpMethod: "post"})
-
-});
-
-router.put("/test", (req: Request, res: Response) => {
-
-    res.json({httpMethod: "put"})
-
-});
-
-router.delete("/test", (req: Request, res: Response) => {
-
-    res.json({httpMethod: "delete"})
-
-});
+router.post("/register", register);
+router.post("/login", login);
 
 export default router;

@@ -1,0 +1,29 @@
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
+import { User } from "./User.js";
+import { Like } from "./Like.js";
+
+@Entity("post")
+export class Post extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ type: "text" })
+  content!: string;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  user!: User;
+
+  @OneToMany(() => Like, (likes) => likes.post)
+  likes!: Like[];
+}

@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { Database } from "./config/db.js"
 import app from "./server.js"
 const startServer = async () => {
