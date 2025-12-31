@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 //define the shape of the jwtPayLoad
 interface jwtPayLoad {

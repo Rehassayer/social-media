@@ -4,6 +4,6 @@ import { toggleLike } from "../controllers/likeController.js";
 
 const router = express.Router();
 
-router.post("/newlike", authMiddleware, toggleLike);
+router.post("/newlike/:postId", authMiddleware, toggleLike);
 
 export default router;
