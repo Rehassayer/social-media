@@ -87,3 +87,36 @@ export const updateComment = async (req: Request, res: Response) => {
     res.status(500).json({ message: "error updating comments!", error });
   }
 };
+
+export const deleteComment = async (req: Request, res: Response) => {
+  try {
+    const { commentId } = req.params;
+    const userId = req.user?.id;
+
+    const commentRepo = Database.getRepository(Comments);
+
+    //find the comment and it's owner
+    const comment = await commentRepo.findOne({
+      where: { id: Number(commentId) },
+      relations: ["user"],
+    });
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    //security check: only owner can delete it
+
+    if (comment.user.id !== userId) {
+      return res.status(403).json({
+        message: " You are mnot authorized to delete this comment ",
+      });
+    }
+
+    //delete comment
+    await commentRepo.remove(comment);
+    res.status(200).json({ message: "comment deleted sucessfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting comment", error });
+  }
+};
