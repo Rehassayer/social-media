@@ -4,13 +4,15 @@ import { Like } from "typeorm";
 
 export const toggleLike = async (req: Request, res: Response) => {
   try {
-    const { postId, userId } = req.body;
+    const { postId } = req.params;
+    const userId = (req as any).user;
+
     const likeRepo = Database.getRepository(Like);
 
     //check if the like already exists (to "unlike")
     const existingLike = await likeRepo.findOneBy({
-      user: { id: userId },
-      post: { id: postId },
+      user: { id: Number(userId) },
+      post: { id: Number(postId) },
     });
 
     if (existingLike) {
