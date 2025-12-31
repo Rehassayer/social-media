@@ -43,3 +43,18 @@ export const getPost = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching posts", error });
   }
 };
+
+// export const updatePost  = async (req: Request, res: Response) => {
+
+//   try{
+
+//     const {postId} = req.params;
+//     const {content} = req.body;
+//     const userId = req.user?.id;
+
+//     const postRepo = Database.getRepository()
+
+//   }catch(error){
+
+//   }
+// }

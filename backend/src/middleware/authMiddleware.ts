@@ -24,7 +24,7 @@ export const authMiddleware = async (
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtPayLoad;
 
       //Attach the userID to the request object
-      (req as any).user = decoded.id;
+      req.user = decoded;
 
       next();
     } catch (error) {
