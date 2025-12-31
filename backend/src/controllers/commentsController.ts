@@ -53,3 +53,37 @@ export const getPostComment = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching comments", error });
   }
 };
+
+//update comments section
+
+export const updateComment = async (req: Request, res: Response) => {
+  try {
+    const { commentId } = req.params;
+    const { content } = req.body;
+    const userId = (req as any).user;
+
+    const commentRepo = Database.getRepository(Comments);
+
+    const comment = await commentRepo.findOne({
+      where: { id: Number(commentId) },
+      relations: ["user"],
+    });
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (comment.user.id !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You can only update your own comments" });
+    }
+
+    comment.content = content;
+    await commentRepo.save(comment);
+
+    res.status(200).json({ message: "Comment Updated sucessfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "error updating comments!", error });
+  }
+};

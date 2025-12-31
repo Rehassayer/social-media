@@ -1,4 +1,9 @@
 import { DataSource } from "typeorm";
+// 1. Import all your entities directly
+import { User } from "../entities/User.js";
+import { Post } from "../entities/Post.js";
+import { Like } from "../entities/Like.js";
+import { Comments } from "../entities/Comment.js";
 
 export const Database = new DataSource({
   type: "postgres",
@@ -9,5 +14,6 @@ export const Database = new DataSource({
   database: "socialMediaDb",
   logging: true,
   synchronize: true,
-  entities: ["src/entities/**/*.ts"],
+  // 2. Use the classes in the array instead of a string path
+  entities: [User, Post, Like, Comments],
 });

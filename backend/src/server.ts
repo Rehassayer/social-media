@@ -18,6 +18,6 @@ app.use(cookieParser());
 app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", likeRoutes);
-app.use("/", commentRoutes);
+app.use("/comments", commentRoutes);
 
 export default app;

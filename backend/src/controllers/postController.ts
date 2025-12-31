@@ -32,7 +32,7 @@ export const getPost = async (req: Request, res: Response) => {
     const postRepo = Database.getRepository(Post);
 
     const posts = await postRepo.find({
-      relations: ["user", "likes"],
+      relations: ["user", "likes", "comments"],
       order: { createdAt: "DESC" },
     });
     if (!posts) {
