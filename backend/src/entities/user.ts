@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { Post } from "./Post.js";
 import { Like } from "./Like.js";
+import { Comments } from "./Comment.js";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -27,4 +28,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Like, (likes) => likes.user)
   likes!: Like[];
+
+  @OneToMany(() => Comments, (comments) => comments.user)
+  comments!: Comments[];
 }
