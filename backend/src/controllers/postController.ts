@@ -26,3 +26,20 @@ export const createPost = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error creating post", error });
   }
 };
+
+export const getPost = async (req: Request, res: Response) => {
+  try {
+    const postRepo = Database.getRepository(Post);
+
+    const posts = await postRepo.find({
+      relations: ["user", "likes"],
+      order: { createdAt: "DESC" },
+    });
+    if (!posts) {
+      res.status(400).json({ message: "No posts found!" });
+    }
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching posts", error });
+  }
+};

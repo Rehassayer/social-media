@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 //API routes
 app.use("/", authRoutes);
-app.use("/post", userRoutes);
-app.use("/like", likeRoutes);
+app.use("/", userRoutes);
+app.use("/", likeRoutes);
 
 export default app;
