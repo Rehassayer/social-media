@@ -5,7 +5,8 @@ import { Database } from "../config/db.js";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { content, userId } = req.body;
+    const { content } = req.body;
+    const userId = req.user?.id;
 
     const userRepo = Database.getRepository(User);
     const postRepo = Database.getRepository(Post);
@@ -33,6 +34,13 @@ export const getPost = async (req: Request, res: Response) => {
 
     const posts = await postRepo.find({
       relations: ["user", "likes", "comments"],
+      select: {
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
       order: { createdAt: "DESC" },
     });
     if (!posts) {
@@ -44,17 +52,34 @@ export const getPost = async (req: Request, res: Response) => {
   }
 };
 
-// export const updatePost  = async (req: Request, res: Response) => {
+export const updatePost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const { content } = req.body;
+    const userId = req.user?.id;
 
-//   try{
+    const postRepo = Database.getRepository(Post);
 
-//     const {postId} = req.params;
-//     const {content} = req.body;
-//     const userId = req.user?.id;
+    const post = await postRepo.findOne({
+      where: { id: Number(postId) },
+      relations: ["user"],
+    });
 
-//     const postRepo = Database.getRepository()
+    if (!post) {
+      return res.status(404).json({ message: "Post is not found" });
+    }
 
-//   }catch(error){
+    if (post.user.id !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You can only update your own post" });
+    }
 
-//   }
-// }
+    post.content = content;
+    await postRepo.save(post);
+
+    res.status(200).json({ message: "Post updated sucessfully ! " });
+  } catch (error) {
+    res.status(500).json({ message: "error updating posts! ", error });
+  }
+};
