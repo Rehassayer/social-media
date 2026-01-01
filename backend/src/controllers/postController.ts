@@ -83,3 +83,37 @@ export const updatePost = async (req: Request, res: Response) => {
     res.status(500).json({ message: "error updating posts! ", error });
   }
 };
+
+export const deletePost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user?.id;
+
+    const postRepo = Database.getRepository(Post);
+
+    //find the post and its owner
+
+    const post = await postRepo.findOne({
+      where: { id: Number(postId) },
+      relations: ["user"],
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post is not found !" });
+    }
+
+    //security check : only owner can delete it
+
+    if (post.user.id !== userId) {
+      return res.status(403).json({
+        message: "you are not authorized to delete this post!",
+      });
+    }
+
+    //delete post
+    await postRepo.remove(post);
+    res.status(200).json({ message: " Post is deleted sucessfully !" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting post!", error });
+  }
+};

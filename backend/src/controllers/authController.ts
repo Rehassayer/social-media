@@ -47,7 +47,10 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const userRepo = Database.getRepository(User);
 
-    const userExits = await userRepo.findOneBy({ email });
+    const userExits = await userRepo.findOne({
+      where: { email },
+      select: ["id", "name", "email", "password"],
+    });
 
     if (!userExits) {
       return res.status(401).json({ error: "email or password invalid!" });
