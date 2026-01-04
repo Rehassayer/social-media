@@ -32,8 +32,10 @@ export const getPost = async (req: Request, res: Response) => {
   try {
     const postRepo = Database.getRepository(Post);
 
+    const currentUserId = req.user?.id;
+
     const posts = await postRepo.find({
-      relations: ["user", "likes", "comments"],
+      relations: ["user", "likes", "likes.user", "comments", "comments.user"],
       select: {
         user: {
           id: true,
@@ -43,10 +45,25 @@ export const getPost = async (req: Request, res: Response) => {
       },
       order: { createdAt: "DESC" },
     });
-    if (!posts) {
-      res.status(400).json({ message: "No posts found!" });
+
+    const postWithStatus = posts.map((post) => {
+      return {
+        ...post,
+        //check if current user's id exists in the relation
+        isLikedByUser: post.likes.some(
+          (like) => like.user.id === Number(currentUserId)
+        ),
+        _count: {
+          likes: post.likes.length,
+          comment: post.comments.length,
+        },
+      };
+    });
+
+    if (!posts || posts.length === 0) {
+      res.status(200).json([]);
     }
-    res.status(200).json(posts);
+    res.status(200).json(postWithStatus);
   } catch (error) {
     res.status(500).json({ message: "Error fetching posts", error });
   }

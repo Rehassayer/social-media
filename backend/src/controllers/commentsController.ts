@@ -7,7 +7,7 @@ export const createComments = async (req: Request, res: Response) => {
   try {
     const { content } = req.body;
     const { postId } = req.params;
-    const userId = (req as any).user; // Extracted from middleware
+    const userId = req.user?.id; // Extracted from middleware
 
     const postRepo = Database.getRepository(Post);
     const commentRepo = Database.getRepository(Comments);
@@ -21,15 +21,20 @@ export const createComments = async (req: Request, res: Response) => {
     //Create and link the comment
     const newComment = commentRepo.create({
       content,
-      user: { id: userId },
+      user: { id: Number(userId) },
       post: { id: Number(postId) },
     });
 
-    await commentRepo.save(newComment);
+    const savedComment = await commentRepo.save(newComment);
+
+    const fullComment = await commentRepo.findOne({
+      where: { id: savedComment.id },
+      relations: ["user"],
+    });
 
     res.status(201).json({
       message: "Comments added sucessfully",
-      comment: newComment,
+      comment: fullComment,
     });
   } catch (error) {
     res.status(500).json({ message: "Error creating comment", error });

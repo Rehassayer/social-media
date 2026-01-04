@@ -5,7 +5,7 @@ import { Like as LikeEntity } from "../entities/Like.js";
 export const toggleLike = async (req: Request, res: Response) => {
   try {
     const { postId } = req.params;
-    const userId = (req as any).user;
+    const userId = req.user?.id;
 
     if (!userId || !postId) {
       return res.status(400).json({ error: "User ID or Post ID missing" });
@@ -23,7 +23,7 @@ export const toggleLike = async (req: Request, res: Response) => {
 
     if (existingLike) {
       await likeRepo.remove(existingLike);
-      return res.json({ message: "Post unliked" });
+      return res.json({ status: "unliked" });
     }
 
     const newLike = likeRepo.create({
@@ -32,7 +32,7 @@ export const toggleLike = async (req: Request, res: Response) => {
     });
 
     await likeRepo.save(newLike);
-    res.status(201).json({ message: "Post Liked" });
+    res.status(201).json({ status: "liked" });
   } catch (error) {
     console.error("DEBUG ERROR:", error); // LOOK AT YOUR TERMINAL FOR THIS
     res.status(500).json({ error: "server error" });
