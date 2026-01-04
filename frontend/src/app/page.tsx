@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import PostCard from "@/components/PostCard";
-import CreatePost from "./create/createPost";
+import CreatePost from "./createPost/createPost";
 
 export default function Dashboard() {
   const [posts, setPosts] = useState([]);

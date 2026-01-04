@@ -28,6 +28,28 @@ export default function PostCard({ post }: any) {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<any[]>(post.comments || []); //initial comments if any
 
+  const formatRelativeTime = (dateString: string) => {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+
+    return past.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   const handleLike = async () => {
     if (loading) return; //prevent double clicking
     setLoading(true);
@@ -63,7 +85,12 @@ export default function PostCard({ post }: any) {
         content: commentText,
       });
 
-      setComments((prev) => [...prev, res.data]);
+      const newComment = {
+        ...res.data,
+        createdAt: res.data.createdAt || new Date().toISOString(),
+      };
+
+      setComments((prev) => [...prev, newComment]);
       setCommentText("");
     } catch (error) {
       console.error("Comment Failed", error);
@@ -194,7 +221,7 @@ export default function PostCard({ post }: any) {
                             {c.user?.name}
                           </span>
                           <span className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter">
-                            Just now
+                            {formatRelativeTime(c.createdAt)}
                           </span>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed bg-white/50 p-2 rounded-lg inline-block">
