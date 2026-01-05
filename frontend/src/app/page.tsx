@@ -4,10 +4,26 @@ import api from "@/lib/api";
 import PostCard from "@/components/PostCard";
 import CreatePost from "./createPost/createPost";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
+
+interface UserType {
+  name: string;
+  email: string;
+}
 
 export default function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<UserType | null>(null);
+
+  const fetchUser = async () => {
+    try {
+      const res = await api.get("/api/user/profile");
+      setUser(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -22,6 +38,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchPosts();
+    fetchUser();
   }, []);
 
   return (
@@ -36,7 +53,13 @@ export default function Dashboard() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href={"/profilePage"}>
-              <button className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 shadow-inner" />
+              <button className="w-9 h-9 rounded-xl bg-black text-white flex items-center justify-center text-xs font-black shadow-lg shadow-black/10 hover:scale-105 transition-all active:scale-95">
+                {user ? (
+                  user.name.charAt(0).toUpperCase()
+                ) : (
+                  <Loader2 size={14} className="animate-spin" />
+                )}
+              </button>{" "}
             </Link>
           </div>
         </div>

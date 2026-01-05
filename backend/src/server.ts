@@ -9,8 +9,13 @@ import userRoutes from "./routes/userRoutes.js";
 import likeRoutes from "./routes/likeRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(
   cors({
     origin: "http://localhost:3000", // The exact URL of your frontend
@@ -19,6 +24,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
   })
 );
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

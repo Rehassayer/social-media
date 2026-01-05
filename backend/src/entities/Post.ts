@@ -19,6 +19,9 @@ export class Post extends BaseEntity {
   @Column({ type: "text" })
   content!: string;
 
+  @Column({ type: "varchar", nullable: true })
+  imageUrl: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 

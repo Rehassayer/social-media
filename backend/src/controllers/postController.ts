@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { User } from "../entities/User.js";
 import { Post } from "../entities/Post.js";
 import { Database } from "../config/db.js";
+import mutler from "multer";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
     const { content } = req.body;
     const userId = req.user?.id;
+    const imagePath = req.file ? req.file.path : undefined;
+
+    console.log("Files:", req.file);
+    console.log("Body:", req.body);
 
     const userRepo = Database.getRepository(User);
     const postRepo = Database.getRepository(Post);
@@ -18,12 +23,21 @@ export const createPost = async (req: Request, res: Response) => {
 
     const newPost = postRepo.create({
       content,
+      imageUrl: imagePath,
       user: user,
     });
 
     await postRepo.save(newPost);
-    res.status(201).json({ message: "Post created", post: newPost });
+
+    const postWithUrl = {
+      ...newPost,
+      imageUrl: newPost.imageUrl
+        ? `http://localhost:8010/${newPost.imageUrl.replace(/\\/g, "/")}`
+        : null,
+    };
+    res.status(201).json({ message: "Post created", post: postWithUrl });
   } catch (error) {
+    console.error("DETAILED ERROR:", error);
     res.status(500).json({ message: "Error creating post", error });
   }
 };
