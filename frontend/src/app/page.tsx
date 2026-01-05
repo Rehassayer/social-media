@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import PostCard from "@/components/PostCard";
 import CreatePost from "./createPost/createPost";
+import Link from "next/link";
 
 export default function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -28,11 +29,15 @@ export default function Dashboard() {
       {/* 1. Elegant Minimal Navbar */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60">
         <div className="max-w-2xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-xl font-black tracking-tighter uppercase italic">
-            Social Feed.
-          </span>
+          <Link href={"/dashboard"}>
+            <span className="text-xl font-black tracking-tighter uppercase italic">
+              Social Feed.
+            </span>
+          </Link>
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 shadow-inner" />
+            <Link href={"/profilePage"}>
+              <button className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 shadow-inner" />
+            </Link>
           </div>
         </div>
       </nav>

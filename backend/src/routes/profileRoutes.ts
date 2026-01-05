@@ -4,7 +4,7 @@ import { getProfile, updateProfile } from "../controllers/userController.js";
 
 const router = express.Router();
 
-router.get("/api/profile", authMiddleware, getProfile);
-router.put("/api/:userId", authMiddleware, updateProfile);
+router.get("/user/profile", authMiddleware, getProfile);
+router.put("/user/profile", authMiddleware, updateProfile);
 
 export default router;

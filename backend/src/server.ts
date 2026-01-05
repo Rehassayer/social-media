@@ -29,6 +29,6 @@ app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", likeRoutes);
 app.use("/comments", commentRoutes);
-app.use("/user", profileRoutes);
+app.use("/api", profileRoutes);
 
 export default app;
