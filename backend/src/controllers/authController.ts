@@ -81,7 +81,9 @@ export const login = async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   res.cookie("jwt", "", {
     httpOnly: true,
+    sameSite: "strict", // Match your original config
     expires: new Date(0),
+    maxAge: 0, // Tells browser to delete immediately
   });
 
   res.status(200).json({ message: "Logged out sucessfully!" });
